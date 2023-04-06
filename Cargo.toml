@@ -15,3 +15,10 @@ clap-num = "1.0.2"
 bincode = "1.3.3"
 serde = { version = "1.0.158", features = ["derive"] }
 serde_arrays = "0.1.0"
+
+
+[profile.release]
+opt-level = "z"     # Optimize for size.
+lto = true          # Enable Link Time Optimization
+codegen-units = 1   # Reduce number of codegen units to increase optimizations.
+strip = true        # Automatically strip symbols from the binary.

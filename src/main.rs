@@ -14,9 +14,9 @@ const CRC_FAILED: u32 = 0x5A5A5A5A;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None, disable_version_flag = true, arg_required_else_help = true)]
 struct Args {
-    #[arg(short, long = "creat-splhdr", help = "creat spl hdr", action = ArgAction::SetTrue)]
+    #[arg(short, long = "creat-spl-hdr", help = "creat spl hdr", action = ArgAction::SetTrue)]
     c: bool,
-    #[arg(short, long = "fix-imghdr", help = "fixed img hdr for emmc boot", action = ArgAction::SetTrue)]
+    #[arg(short, long = "fix-gpt-hdr", help = "fix gpt hdr for emmc boot", action = ArgAction::SetTrue)]
     i: bool,
     #[arg(short, long = "spl-bak-addr", help = "set backup SPL addr", value_parser = maybe_hex::< u32 >, default_value = "0x200000")]
     a: u32,
@@ -118,7 +118,7 @@ fn write_spl_hdr(conf: &HeaderConf) {
 /// Read GPT PMBR+Header, then write the backup address at 0x4, and write the wrong CRC
 /// check value at 0x290, so that bootrom CRC check fails and jump to the backup address
 /// to load the real spl.
-fn write_img_hdr(conf: &HeaderConf) {
+fn write_gpt_hdr(conf: &HeaderConf) {
     let mut file = File::options()
         .read(true)
         .write(true)
@@ -146,6 +146,6 @@ fn main() {
         return;
     }
     if hdr_conf.fix_img_hdr {
-        write_img_hdr(&hdr_conf);
+        write_gpt_hdr(&hdr_conf);
     }
 }
